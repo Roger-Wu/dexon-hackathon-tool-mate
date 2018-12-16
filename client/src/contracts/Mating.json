@@ -1,0 +1,606 @@
+{
+  "contractName": "Mating",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        },
+        {
+          "name": "price",
+          "type": "uint256"
+        }
+      ],
+      "name": "addFriend",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_friendFee",
+          "type": "uint256"
+        },
+        {
+          "name": "_maxScore",
+          "type": "uint256"
+        }
+      ],
+      "name": "adjustContract",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "genderId",
+          "type": "uint256"
+        },
+        {
+          "name": "bonus",
+          "type": "uint256"
+        }
+      ],
+      "name": "adjustGenderBonus",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "buyContractService",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "dest",
+          "type": "address"
+        }
+      ],
+      "name": "buyServiceCoin",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "callSpecificDating",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_toolman",
+          "type": "address"
+        },
+        {
+          "name": "number",
+          "type": "uint256"
+        }
+      ],
+      "name": "callSpecificService",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "number",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancellService",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "addrTool",
+          "type": "address"
+        }
+      ],
+      "name": "datingAccept",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "addrMate",
+          "type": "address"
+        },
+        {
+          "name": "hour",
+          "type": "uint256"
+        },
+        {
+          "name": "score",
+          "type": "uint256"
+        }
+      ],
+      "name": "datingFinished",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "name": "_serviceContent",
+          "type": "string"
+        }
+      ],
+      "name": "offerService",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "name": "luckyman",
+          "type": "address"
+        }
+      ],
+      "name": "ownerTransfer",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "datingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "gender",
+          "type": "uint256"
+        },
+        {
+          "name": "id",
+          "type": "string"
+        }
+      ],
+      "name": "register",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "lazyman",
+          "type": "address"
+        }
+      ],
+      "name": "serviceAccept",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "addrTool",
+          "type": "address"
+        },
+        {
+          "name": "number",
+          "type": "uint256"
+        },
+        {
+          "name": "score",
+          "type": "uint256"
+        }
+      ],
+      "name": "serviceFinished",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "datingPrice",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateMyInfo",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawToolman",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "Registered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "toolman",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "serviceContent",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "price",
+          "type": "uint256"
+        }
+      ],
+      "name": "getserviceoffer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "toolman",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "serviceContent",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "price",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancellServiceOffer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "lazyman",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "toolman",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "servicenumber",
+          "type": "uint256"
+        }
+      ],
+      "name": "callService",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "toolman",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "lazyman",
+          "type": "address"
+        }
+      ],
+      "name": "serviceAccepted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "toolman",
+          "type": "address"
+        }
+      ],
+      "name": "callDating",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "lazyman",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "toolman",
+          "type": "address"
+        }
+      ],
+      "name": "datingAccepted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "lazyman",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "toolman",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "serviceContent",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "score",
+          "type": "uint256"
+        }
+      ],
+      "name": "finishService",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getContractInfo",
+      "outputs": [
+        {
+          "name": "serviceCoin",
+          "type": "uint256"
+        },
+        {
+          "name": "asset",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "getMateInfo",
+      "outputs": [
+        {
+          "name": "nowisdating",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getmyinfo",
+      "outputs": [
+        {
+          "name": "serviceCoin",
+          "type": "uint256"
+        },
+        {
+          "name": "toolCoin",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "number",
+          "type": "uint256"
+        }
+      ],
+      "name": "getmyservice",
+      "outputs": [
+        {
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "name": "content",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "getToolManInfo",
+      "outputs": [
+        {
+          "name": "meanReceivedService",
+          "type": "uint256[]"
+        },
+        {
+          "name": "meanReceivedDating",
+          "type": "uint256[]"
+        },
+        {
+          "name": "meanGiveService",
+          "type": "uint256[]"
+        },
+        {
+          "name": "meanGiveDating",
+          "type": "uint256[]"
+        },
+        {
+          "name": "datingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "gender",
+          "type": "uint256"
+        },
+        {
+          "name": "isfriend",
+          "type": "bool"
+        },
+        {
+          "name": "bidFriendFee",
+          "type": "uint256"
+        },
+        {
+          "name": "id",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "isRegister",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "networks": {
+    "238": {
+      "address": "0x69969dbc47dd3ced666d78265ff678d13425dd62"
+    }
+  }
+}
