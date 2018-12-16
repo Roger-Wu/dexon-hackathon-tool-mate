@@ -33,7 +33,9 @@ class App extends Component {
     addressToServices: {},
     myServiceRequests: [],
     isShowingService: true,
+    isShowingSentService: true,
     mySentServiceRequests: [],
+    myAcceptedSentServiceRequest: [],
     // toolManInfoDict: {},
   };
 
@@ -62,15 +64,20 @@ class App extends Component {
         this.fetchServices();
         this.fetchMyServiceRequest();
         this.fetchMySentServiceRequest();
+        this.fetchMyAcceptedSentServiceRequest();
         this.fetchMyInfo();
         // this.fetchMyToolmanInfo();
 
         setInterval(() => {
-          // this.fetchContractInfo();
-          // this.fetchRegisterInfo();
-          // this.fetchRegisteredUser();
-          // this.fetchServices();
-          // this.fetchMyServiceRequest();
+          this.fetchContractInfo();
+          this.fetchRegisterInfo();
+          this.fetchRegisteredUser();
+          this.fetchServices();
+          this.fetchMyServiceRequest();
+          this.fetchMySentServiceRequest();
+          this.fetchMyAcceptedSentServiceRequest();
+          this.fetchMyInfo();
+
         }, 3000);
       });
 
@@ -124,9 +131,9 @@ class App extends Component {
   fetchMyInfo = async () => {
     const { accounts, contract } = this.state;
 
-    if (this.state.userInfo.isRegister) {
-      return;
-    }
+    // if (!this.state.userInfo.isRegister) {
+    //   return;
+    // }
 
     if (accounts.length === 0) {
       return;
@@ -184,10 +191,10 @@ class App extends Component {
       registeredUsers.push(event.returnValues.user);
     }
 
-    // if no new registered user, return;
-    if (registeredUsers.length === this.state.registeredUsers.length) {
-      return;
-    }
+    // // if no new registered user, return;
+    // if (registeredUsers.length === this.state.registeredUsers.length) {
+    //   return;
+    // }
 
     // fetchAllToolManInfo
 
@@ -276,6 +283,28 @@ class App extends Component {
     })
   }
 
+  fetchMyAcceptedSentServiceRequest = async () => {
+    const { accounts, contract } = this.state;
+
+    if (accounts.length === 0) {
+      return;
+    }
+
+    console.log("fetchMyAcceptedSentServiceRequest");
+
+    const myAcceptedSentServiceRequest = await contract.getPastEvents('serviceAccepted', {
+      filter: {lazyman: accounts[0]},
+      fromBlock: 624677,
+      toBlock: 'latest'
+    });
+    // , function(error, events){ console.log(events); }
+
+    console.log("myAcceptedSentServiceRequest", myAcceptedSentServiceRequest);
+
+    this.setState({
+      myAcceptedSentServiceRequest,
+    })
+  }
 
   fetchMySentServiceRequest = async () => {
     const { accounts, contract } = this.state;
@@ -355,8 +384,11 @@ class App extends Component {
     const idInput = this.refs.idInput.value; // string
 
     const datingPrice = parseInt(datingPriceInputStr);
-    const gender = parseInt(genderInput);
-
+    let gender = 0;
+    if (genderInput == 1 || genderInput == "男") {
+      gender = 1;
+    }
+    // const gender = parseInt(genderInput);
 
     contract.methods.register(datingPrice, gender, idInput).send({ from: accounts[0] })
     .once('transactionHash', (hash) => {
@@ -436,9 +468,11 @@ class App extends Component {
     contract.methods.serviceAccept(lazyman).send({ from: accounts[0] })
     .once('transactionHash', (hash) => {
       console.log('once transactionHash', hash);
-      this.setState({
-        isShowingService: false,
-      });
+      setTimeout(() => {
+        this.setState({
+          isShowingService: false,
+        });
+      }, 3000);
     })
     .once('error', function(error){
       console.log('once error', error);
@@ -452,7 +486,7 @@ class App extends Component {
   serviceReject = async (lazyman) => {
     this.setState({
       isShowingService: false,
-    })
+    });
   }
 
   handleGiveScore = async (event) => {
@@ -473,8 +507,14 @@ class App extends Component {
     // console.log("mySentServiceRequests[0].returnValues.toolman", mySentServiceRequests[0].returnValues.toolman);
 
     contract.methods.serviceFinished(mySentServiceRequests[0].returnValues.toolman, 1, score).send({ from: accounts[0] })
-    .once('transactionHash', function(hash){
+    .once('transactionHash', (hash) => {
       console.log('once transactionHash', hash);
+
+      setTimeout(() => {
+        this.setState({
+          isShowingSentService: false,
+        });
+      }, 3000);
     })
     .once('error', function(error){
       console.log('once error', error);
@@ -483,19 +523,38 @@ class App extends Component {
       // will be fired once the receipt is mined
       console.log("then receipt", receipt);
     });
-  }
 
+  };
+
+  getName = (addr) => {
+    let name = "";
+    try {
+      name = this.state.addressToToolManInfo[addr].id;
+    } catch (error) {}
+    return name;
+  };
+
+  getServiceContent = (addr, index) => {
+    console.log("getServiceContent");
+    console.log("addr", "index", addr, index);
+    let content = "";
+    try {
+      content = this.state.addressToServices[addr][index].serviceContent;
+    } catch (error) {}
+    return content;
+  };
 
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
+
     return (
       <div className="App">
         <nav className="navbar navbar-light navbar-dark bg-primary mb-4"
         // style={{"backgroundColor": "#4267b2"}}
         >
-          <span className="navbar-brand mb-0 h1">Tool Mate</span>
+          <span className="navbar-brand mb-0 h1">Tool Mate 工具人交友</span>
         </nav>
 
         <div className="container">
@@ -506,7 +565,7 @@ class App extends Component {
             <div className="card narrow-form-container">
               <div className="card-body">
                 <div className="text-left">
-                  <h3 className="text-center">成為工具人</h3>
+                  <h3 className="text-center">註冊</h3>
                   <form onSubmit={this.handleRegisterSubmit}>
 
                     <fieldset className="form-group">
@@ -522,12 +581,12 @@ class App extends Component {
                     </fieldset>
 
                     <fieldset className="form-group">
-                      <label htmlFor="datingPriceInput" className="bmd-label-floating">約會價格</label>
+                      <label htmlFor="datingPriceInput" className="bmd-label-floating">約會價格（工具人幣）</label>
                       <input type="text" className="form-control" id="datingPriceInput" ref="datingPriceInput" />
                     </fieldset>
 
                     <div className="text-center">
-                      <button type="submit" className="btn btn-primary btn-raised">成為工具人</button>
+                      <button type="submit" className="btn btn-primary btn-raised">註冊</button>
                     </div>
                   </form>
                 </div>
@@ -550,6 +609,8 @@ class App extends Component {
             <h3>我的帳戶</h3>
             <div className="mb-5 card narrow-form-container ">
               <div className="card-body">
+                <div></div>
+                <h4>我是 {this.getName(this.state.accounts[0])}</h4>
                 <h4>{this.state.myInfo.serviceCoin} 萬用幣</h4>
                 <h4>{this.state.myInfo.toolCoin} 工具人幣</h4>
               </div>
@@ -575,12 +636,13 @@ class App extends Component {
                         } */}
                       </h5>
                       <h5>
-                        要求者：{event.returnValues.lazyman}
+                        要求者：{this.getName(event.returnValues.lazyman)}
                         {/* 要求者： {(!!this.state.addressToToolManInfo) && this.state.addressToToolManInfo[ event.returnValues.lazyman ].id} */}
                       </h5>
                       <h5>
                         {/* {JSON.stringify(this.state.addressToServices)} */}
-                        服務內容：修電腦
+                        服務內容：{this.getServiceContent(event.returnValues.toolman, parseInt(event.returnValues.servicenumber))}
+
                         {/*
                           !!this.state.addressToServices &&
                           !!event.returnValues.toolman &&
@@ -602,34 +664,38 @@ class App extends Component {
             </div>
 
             <div className="mb-5">
-              <h3>我要求別人提供的服務</h3>
-                {(this.state.mySentServiceRequests.length === 0) &&
+              <h3>我要求別人提供服務</h3>
+                {(!this.state.isShowingSentService || this.state.mySentServiceRequests.length === 0) &&
                   <h4 className="text-muted">目前沒有服務要求</h4>
                 }
 
-                {this.state.isShowingService && this.state.mySentServiceRequests.map((event, index) => {
+                {this.state.isShowingSentService && this.state.mySentServiceRequests.map((event, index) => {
                   return <div className="card narrow-form-container mb-3">
                     <div className="card-body" key={"service-request-" + index}>
                       <h5>
-                        工具人：{event.returnValues.toolman}
+                        {/* 工具人：{event.returnValues.toolman} */}
+                        工具人：{this.getName(event.returnValues.toolman)}
                       </h5>
                       <h5>
-                        服務內容：修電腦
+                        服務內容：{this.getServiceContent(event.returnValues.toolman, parseInt(event.returnValues.servicenumber))}
                       </h5>
-                      <div class="mt-3">
-                        <form onSubmit={this.handleGiveScore}>
-                          <fieldset className="form-group">
-                            <label htmlFor="scoreInput" className="">評分</label>
-                            <input type="text" className="form-control" id="scoreInput" ref="scoreInput" />
-                          </fieldset>
 
-                          <div className="text-center">
-                            <button type="submit" className="btn btn-primary btn-raised">上傳評分</button>
-                          </div>
-                        </form>
-                        {/* <button onClick={() => {this.serviceAccept(event.returnValues.lazyman)}} className="btn btn-primary btn-raised mr-3">接受</button>
-                        <button onClick={() => {this.serviceReject(event.returnValues.lazyman)}} className="btn btn-danger btn-raised">拒絕</button> */}
-                      </div>
+                      { this.state.myAcceptedSentServiceRequest.length > 0 &&
+                        <div class="mt-3">
+                          <form onSubmit={this.handleGiveScore}>
+                            <fieldset className="form-group">
+                              <label htmlFor="scoreInput" className="">評分（滿分 10 分）</label>
+                              <input type="text" className="text-center form-control" id="scoreInput" ref="scoreInput" />
+                              <div>你的評分會決定對方獲得的工具人幣數量</div>
+                            </fieldset>
+
+                            <div className="text-center">
+                              <button type="submit" className="btn btn-primary btn-raised">上傳評分</button>
+                            </div>
+                          </form>
+                        </div>
+                      }
+
                     </div>
 
                   </div>;
@@ -637,7 +703,7 @@ class App extends Component {
             </div>
 
             <h3>我能提供什麼服務？</h3>
-            <div className="card narrow-form-container mb-3">
+            <div className="card narrow-form-container mb-5">
               <div className="card-body">
                 <div className=" text-left">
                   <form onSubmit={this.handleOfferServiceSubmit}>
@@ -665,33 +731,43 @@ class App extends Component {
             <table className="table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
+                  {/* <th scope="col">#</th> */}
                   <th scope="col">頭像</th>
                   {/* <th scope="col">Address</th> */}
                   <th scope="col">暱稱</th>
                   <th scope="col">性別</th>
                   <th scope="col">約會價格</th>
-                  <th scope="col">評分</th>
+                  <th scope="col">平均服務評分</th>
+                  <th scope="col">提供服務</th>
                   {/* <th scope="col">是朋友</th> */}
                 </tr>
               </thead>
               <tbody>
                 { this.state.registeredUsers.map((user, index) => {
                   return <tr key={"toolman-" + index}>
-                    <th key={"toolman-index-" + index} scope="row">{index}</th>
+                    {/* <th key={"toolman-index-" + index} scope="row">{index}</th> */}
                     <td key={"toolman-photo-" + index}>
-                      <img
-                        src="https://img.icons8.com/color/1600/circled-user-male-skin-type-1-2.png"
-                        alt="avatar"
-                        width="64"
-                      />
+                      {
+                        (this.state.toolManInfos[index].gender == 0) ?
+                        <img
+                          src="https://lh3.googleusercontent.com/-X101O8wMJRF12kOkL8pEAYvKI098dM1YWXd6yioBEkdnuNz-ocM-OaNGKo1pmHtQabwPVgH-xGC0MVEjC_nS8Mt8mTjVsVje6yq9K8Sxc4xI9cfYkp_Za-3s-f2MAwv9R9QjlWy"
+                          alt="avatar"
+                          width="64"
+                        />
+                        :
+                        <img
+                          src="https://i.imgur.com/DePiwvi.png"
+                          alt="avatar"
+                          width="64"
+                        />
+                      }
                     </td>
 
                     {/* <td key={"toolman-address-" + index}>{user}</td> */}
                     <td key={"toolman-id-" + index}>{this.state.toolManInfos[index].id}</td>
                     <td key={"toolman-gender-" + index}>{genders[this.state.toolManInfos[index].gender]}</td>
                     <td key={"toolman-price-" + index}>{this.state.toolManInfos[index].datingPrice}</td>
-                    <td key={"toolman-score-" + index}>{(this.state.toolManInfos[index].meanReceivedService.length > 0) && this.state.toolManInfos[index].meanReceivedService[0]}</td>
+                    <td key={"toolman-score-" + index}>{(this.state.toolManInfos[index].meanReceivedService.length > 0)? this.state.toolManInfos[index].meanReceivedService[0] : "-"}</td>
                     {/* <td key={"toolman-isFriend-" + index}>{this.state.toolManInfos[index].isfriend.toString()}</td> */}
                     <td key={"toolman-services-" + index}>
                       {
@@ -701,7 +777,7 @@ class App extends Component {
                             <div className="h5">
                               {service.serviceContent}
                             </div>
-                            <div className="h5">
+                            <div className="h6">
                               {service.price} 萬用幣
                             </div>
                             <button type="submit" className="btn btn-primary btn-raised" onClick={() => {this.callSpecificService(user, serviceIndex)}}>
